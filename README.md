@@ -1,56 +1,23 @@
 # Leaflet KML layer plugin
 
-![Example](assets/screenshot.jpg)
+![Example](assets/ss2.png)
 
 Demo: https://www.windy.com/uploader
 
 This plugin was extracted from Pavel Shramov's Leaflet Plugins [repository](https://github.com/shramov/leaflet-plugins) in order to maintain this code more frequently and separate KML layer from other plugins.
 
-So far we have fixed few issues.
+I fix some issue in original repo.
 
 Probablly will work on Leaflet 1+, tested on Leaflet 1.4.
 
 ## How to use
 
- ```html
-<html>
-<head>
-	<link rel="stylesheet" href="http://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
-	<script src="http://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
-	<script src="./L.KML.js"></script>
-</head>
-<body>
-	<div style="width:100%; height:100%" id="map"></div>
-	<script type='text/javascript'>
-
-		// Make basemap
-		const map = new L.Map('map', {center: new L.LatLng(58.4, 43.0), zoom: 11})
-		, osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
-
-		map.addLayer(osm)
-
-		// Load kml file
-		fetch('assets/example1.kml')
-			  .then( res => response.text() )
-			  .then( kml => {
-
-				  	// Create new kml overlay
-					const track = new L.KML(kml)
-					map.addLayer(track)
-
-					// Adjust map to show the kml
-					const bounds = track.getBounds()
-					map.fitBounds( bounds )
-
-			  })
-
-	</script>
-</body>
-</html>
-```
+make sure you have web server installed.
+clone this repo in your /var/www/html or another directory that become the root of your web server.
 
 ## Changelog
 
+ * 1.1.0 - Updated README and fix some bugs
  * 1.0.1 - Updated README
  * 1.0.0 - Initial commit, original version with few fixes
 
