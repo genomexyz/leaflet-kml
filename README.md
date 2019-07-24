@@ -12,8 +12,9 @@ Probablly will work on Leaflet 1+, tested on Leaflet 1.4.
 
 ## How to use
 
-make sure you have web server installed.
-clone this repo in your /var/www/html or another directory that become the root of your web server.
+Make sure you have web server installed.
+
+Clone this repo in your /var/www/html or another directory that become the root of your web server.
 
 ## Changelog
 
