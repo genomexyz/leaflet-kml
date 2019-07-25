@@ -20,7 +20,7 @@
 
 
 
-<div id="map" style="width: 600px; height: 400px;"></div>
+<div id="map" style="width: 1000px; height: 700px;"></div>
 <script>
 
 	// Make basemap
@@ -30,7 +30,7 @@
    	map.addLayer(osm)
 
    	// Load kml file
-   	fetch('assets/example1.kml')
+   	fetch('assets/sigmet.kml')
    		  .then( res => res.text() )
    		  .then( kmltext => {
 
