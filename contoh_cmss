@@ -1,0 +1,324 @@
+
+<HTML>
+<HEAD>
+<STYLE TYPE="text/css">
+<!--
+#dek {POSITION:absolute;VISIBILITY:hidden;Z-INDEX:200;}
+a:link              {color: blue;}
+a:visited           {color: purple;}
+a:active            {color: red;}
+a.nolink:link, a.nolink:visited, a.nolink:active {color: brown; text-decoration: none}//-->
+</STYLE>
+<TITLE>
+CMSS Message Extraction
+</TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<DIV ALIGN="CENTER">
+<A HREF="/"><FONT SIZE="2"><STRONG>Server home page</STRONG></A>
+</DIV>
+<DIV ID="dek"></DIV>
+<SCRIPT TYPE="text/javascript">
+<!--
+Xoffset=-50;    // modify these values to ...
+Yoffset=+40;    // change the popup position.
+var old,skn,iex=(document.all),yyy=-1000;
+var ns4=document.layers
+var ns6=document.getElementById&&!document.all
+var ie4=document.all
+if (ns4)
+skn=document.dek
+else if (ns6)
+skn=document.getElementById("dek").style
+else if (ie4)
+skn=document.all.dek.style
+if(ns4)document.captureEvents(Event.MOUSEMOVE);
+else{
+skn.visibility="visible"
+skn.display="none"
+}
+document.onmousemove=get_mouse;
+function popup(msg,bak){
+var content="<TABLE  WIDTH=150 BORDER=1 BORDERCOLOR=black CELLPADDING=2 CELLSPACING=0 "+"BGCOLOR="+bak+"><TD ALIGN=left><FONT COLOR=black SIZE=1>"+msg+"</FONT></TD></TABLE>";
+yyy=Yoffset;
+if(ns4){skn.document.write(content);skn.document.close();skn.visibility="visible"}
+if(ns6){document.getElementById("dek").innerHTML=content;skn.display=''}
+if(ie4){document.all("dek").innerHTML=content;skn.display=''}
+}
+function get_mouse(e){
+var x=(ns4||ns6)?e.pageX:event.x+document.body.scrollLeft;
+skn.left=x+Xoffset;
+var y=(ns4||ns6)?e.pageY:event.y+document.body.scrollTop;
+skn.top=y+yyy;
+}
+function kill(){
+yyy=-1000;
+if(ns4){skn.visibility="hidden";}
+else if (ns6||ie4)
+skn.display="none"
+}
+//-->
+</SCRIPT>
+<P>
+<CENTER>
+<TABLE WIDTH="100%" border=0 cellpadding=10 BGCOLOR="#E3E3E3">
+<TR>
+<TD ALIGN="CENTER">
+<FONT SIZE="4"><STRONG>CMSS Message Extraction</STRONG>
+</TD>
+</TR>
+</TABLE>
+</CENTER>
+<P>
+<CENTER><I><FONT SIZE="2">
+Place mouse over <FONT COLOR="brown"> field name </FONT> for help notes
+</I></CENTER>
+<P>
+<FORM ACTION="extract_cmss_msgs.pl" METHOD="POST">
+<TABLE WIDTH="100%" BORDER="0" BGCOLOR="#E3E3E3" ALIGN="CENTER" CELLSPACING="0">
+<TR>
+<TD>&nbsp;</TD>
+</TR>
+<TR>
+<TD>&nbsp;
+<TD><FONT SIZE="2"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Limit the search to this station.  Can be WMO, Aviation or internal station number.","white")'; ONMOUSEOUT='kill()'>
+ Station ID. </a></STRONG></FONT>
+<TD><FONT SIZE="2"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("If specified, will try to extract off other identifiers for this station","white")'; ONMOUSEOUT='kill()'>
+ Station ID Type </a></STRONG></FONT>
+<TD><FONT SIZE="1"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("The extract will cease at this date.","white")'; ONMOUSEOUT='kill()'>
+ Start Date </a></STRONG></FONT>
+<TD><FONT SIZE="1"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("The extract will cease at this time.","white")'; ONMOUSEOUT='kill()'>
+ Start Time </a></STRONG></FONT>
+<TD><FONT SIZE="1"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("The extract will commence from this date and search back to Start Date/Time.","white")'; ONMOUSEOUT='kill()'>
+ End Date </a></STRONG></FONT>
+<TD><FONT SIZE="1"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("The extract will commence from this time and search back to Start Date/Time.","white")'; ONMOUSEOUT='kill()'>
+ End Time </a></STRONG></FONT>
+<TD>&nbsp;
+</TR>
+<TR>
+<TD>&nbsp;
+<TD><INPUT TYPE="TEXT" SIZE="10" NAME="STN_ID" VALUE="">
+<TD><SELECT NAME="ID_TYPE">
+<OPTION VALUE="NONE" SELECTED>Unspecified
+<OPTION VALUE="WMO">WMO Number
+<OPTION VALUE="AVIATION">Aviation ID
+</SELECT>
+<TD><INPUT TYPE="TEXT" SIZE="12" NAME="START_DATE" VALUE="DD-MM-YYYY" >
+<TD><INPUT TYPE="TEXT" SIZE="5"  NAME="START_TIME" VALUE="hh:mm" >
+<TD><INPUT TYPE="TEXT" SIZE="12" NAME="END_DATE" VALUE="DD-MM-YYYY" >
+<TD><INPUT TYPE="TEXT" SIZE="5"  NAME="END_TIME" VALUE="hh:mm" >
+<TD>&nbsp;
+</TR>
+<TR>
+<TD>&nbsp;</TD>
+</TR>
+<TR>
+<TD>&nbsp;
+<TD COLSPAN="2"><FONT SIZE="2"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Limit the extract to specific Meteorological message types.","white")'; ONMOUSEOUT='kill()'>
+ Message Type </a></STRONG></FONT>
+<TD><FONT SIZE="2"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Limit the extract to WMO TTAAII headers.","white")'; ONMOUSEOUT='kill()'>
+ TTAAii </a></STRONG></FONT>
+<TD><FONT SIZE="2"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Limit the extract to WMO messages from this centre.","white")'; ONMOUSEOUT='kill()'>
+ CCCC </a></STRONG></FONT>
+<TD><FONT SIZE="1"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Terminate the extract when this number of messages have been found.","white")'; ONMOUSEOUT='kill()'>
+ Max. Msgs<br>Returned </a></STRONG></FONT>
+<TD><FONT SIZE="1"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Terminate the extract after this number of seconds searching.","white")'; ONMOUSEOUT='kill()'>
+ Max. Search<br>Time (secs.) </a></STRONG></FONT>
+</TR>
+<TR>
+<TD>&nbsp;
+<TD COLSPAN="2"><SELECT NAME="MSG_TYPE">
+<OPTION VALUE="ALL" SELECTED>All Message Types
+<OPTION VALUE="AAXX">Synop (AAXX)
+<OPTION VALUE="PPAA, PPBB, PPCC, PPDD">Pilot (PPAA, PPBB, PPCC, PPDD)
+<OPTION VALUE="TTAA, TTBB, TTCC, TTDD">Temp  (TTAA, TTBB, TTCC, TTDD)
+<OPTION VALUE="Metar, Speci, Speciaws">Aviation Obs (Metar, Speci, Speciaws)
+<OPTION VALUE="Metar">Metar
+<OPTION VALUE="Speci, Speciaws">Speci  (Speci, Speciaws)
+<OPTION VALUE="BBXX">Ship (BBXX)
+<OPTION VALUE="JJYY">XBT (JJYY)
+<OPTION VALUE="ZZYY">Drifting buoy (ZZYY)
+<OPTION VALUE="QQAA">Pilot Ship (QQAA)
+<OPTION VALUE="UUAA">Temp Ship (UUAA)
+<OPTION VALUE="MMXX">Waveob (MMXX)
+<OPTION VALUE="BBXX JJYY ZZYY MMXX">Marine Obs. (BBXX JJYY ZZYY MMXX)
+<OPTION VALUE="TAF, TAFOR">TAF
+</SELECT>
+<TD><INPUT TYPE="TEXT" SIZE="7" NAME="TTAAII" VALUE="WSID">
+<TD><INPUT TYPE="TEXT" SIZE="5" NAME="CCCC" VALUE="">
+<TD><INPUT TYPE="TEXT" SIZE="3" NAME="MAX_MSGS" VALUE="20">
+<TD><INPUT TYPE="TEXT" SIZE="3" NAME="MAX_SEARCH_TIME" VALUE="60">
+</TR>
+<TR>
+<TD>&nbsp;</TD>
+</TR>
+<TR>
+<TD>&nbsp;
+<TD>
+<INPUT TYPE="CHECKBOX" NAME="Summary" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Return a short summary of data found (no message text).","white")'; ONMOUSEOUT='kill()'>
+ Summary Only </a> </FONT><BR>
+<INPUT TYPE="CHECKBOX" NAME="Details" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Return internal comms. details about the messages found.","white")'; ONMOUSEOUT='kill()'>
+ Msg Details </a> </FONT><BR>
+<INPUT TYPE="CHECKBOX" NAME="Plain" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Display the output in non-HTML format.","white")'; ONMOUSEOUT='kill()'>
+ Plain Text </a> </FONT><BR>
+</TD>
+<TD>
+<INPUT TYPE="CHECKBOX" NAME="Oldest" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Order the extract results from oldest to newest message found (slow).","white")'; ONMOUSEOUT='kill()'>
+ Oldest msg First </a> </FONT><BR>
+<INPUT TYPE="CHECKBOX" NAME="BUL01" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Include domestically produced WMO bulletins in the extract.","white")'; ONMOUSEOUT='kill()'>
+ Include Bulletins</a> </FONT><BR>
+<INPUT TYPE="CHECKBOX" NAME="Debug" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Print diagnostics for this extract to the page.","white")'; ONMOUSEOUT='kill()'>
+ Debug search </a> </FONT><BR>
+</TD>
+<TD>
+<FONT SIZE="2"><STRONG><A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Limit the extract to only this input COMMS circuit (internal use).","white")'; ONMOUSEOUT='kill()'>
+ Comms<BR>Circuit </a></STRONG></FONT><BR>
+<INPUT TYPE="TEXT" SIZE="6" NAME="RRRCC" VALUE="">
+<TD>
+<INPUT TYPE="RADIO" NAME="TIMERANGE" VALUE="HOURS1" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Limit the extract to the specified time range (1 hour to 3 days).","white")'; ONMOUSEOUT='kill()'>
+ Past 1 hour </a> </FONT><BR>
+<INPUT TYPE="RADIO" NAME="TIMERANGE" VALUE="HOURS6" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Limit the extract to the specified time range (1 hour to 3 days).","white")'; ONMOUSEOUT='kill()'>
+ Past 6 hours </a> </FONT><BR>
+<INPUT TYPE="RADIO" NAME="TIMERANGE" VALUE="HOURS12" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Limit the extract to the specified time range (1 hour to 3 days).","white")'; ONMOUSEOUT='kill()'>
+ Past 12 hours </a> </FONT><BR>
+</TD><TD>
+<INPUT TYPE="RADIO" NAME="TIMERANGE" VALUE="HOURS24" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Limit the extract to the specified time range (1 hour to 3 days).","white")'; ONMOUSEOUT='kill()'>
+ Past 1 day </a> </FONT><BR>
+<INPUT TYPE="RADIO" NAME="TIMERANGE" VALUE="DAYS2" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Limit the extract to the specified time range (1 hour to 3 days).","white")'; ONMOUSEOUT='kill()'>
+ Past 2 days </a> </FONT><BR>
+<INPUT TYPE="RADIO" NAME="TIMERANGE" VALUE="DAYS3" ><FONT SIZE="1"> <A CLASS="nolink" HREF="" onclick="this.href='javascript:void(0)';this.disabled=1" ONMOUSEOVER='popup("Limit the extract to the specified time range (1 hour to 3 days).","white")'; ONMOUSEOUT='kill()'>
+ Past 3 days </a> </FONT><BR>
+</TD>
+</TR>
+<TR>
+<TD>&nbsp;</TD>
+</TR>
+</TABLE>
+<BR>
+<CENTER>
+<INPUT TYPE="SUBMIT" VALUE="Extract Msgs">
+<INPUT TYPE="submit" NAME="reset" value="Reset Form">
+<BR>
+</CENTER>
+</FORM>
+
+<BR><b>Extracting messages from CMSS:</b>
+<BR>... with TTAAii: <B>WSID</B>
+<BR>... limited to <B>20</B> messages
+<BR>... limited to <B>60</B> seconds search time
+<HR SIZE="1">
+<TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1716754<TD><B>Report No.:</B> 1716754<TD><B>Received:</B> 24-07-2019 &nbsp; 22:36.10 GMT
+</TABLE>
+<PRE>WSID21 WAAA 242234 
+WAAZ SIGMET 11 VALID 242240/250140 WAAA-
+WAAZ UJUNG PANDANG FIR EMBD TS OBS WI N0253 E13953 - N0234 E13750 - N0305 E13748 - N0330 E13815 - N0330 E14030 - N0253 E13953 TOP FL520 MOV W 15KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1706273<TD><B>Report No.:</B> 1706273<TD><B>Received:</B> 24-07-2019 &nbsp; 14:58.30 GMT
+</TABLE>
+<PRE>WSID21 WAAA 241456 
+WAAZ SIGMET 08 VALID 241500/241900 WAAA-
+WAAZ UJUNG PANDANG FIR EMBD TS OBS WI N0139 E14100 - N0124 E14046 - N0112 E13934 - N0131 E13900 - N0158 E13922 - N0258 E14100 - N0139 E14100 TOP FL530 MOV W 10KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1688778<TD><B>Report No.:</B> 1688778<TD><B>Received:</B> 24-07-2019 &nbsp; 05:59.10 GMT
+</TABLE>
+<PRE>WSID21 WAAA 240558 
+WAAZ SIGMET 03 VALID 240558/240958 WAAA-
+WAAZ UJUNG PANDANG FIR EMBD TS OBS WI N0243 E12055 - N0217 E12041 - N0202 E11931 - N0246 E11836 - N0341 E11822 - N0400 E11927 - N0243 E12055 TOP FL490 MOV WSW 20KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1686728<TD><B>Report No.:</B> 1686728<TD><B>Received:</B> 24-07-2019 &nbsp; 04:46.00 GMT
+</TABLE>
+<PRE>WSID20 WIII 240440 
+WIIZ SIGMET 04 VALID 240440/240740 WIII-
+WIIZ JAKARTA FIR EMBD TS OBS WI S0322 E09404 - S0200 E09200 - S0115 E09200 - S0114 E09437
+- S0322 E09404 TOP FL510 MOV WSW 10KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1681470<TD><B>Report No.:</B> 1681470<TD><B>Received:</B> 24-07-2019 &nbsp; 01:37.10 GMT
+</TABLE>
+<PRE>WSID20 WIII 240130 
+WIIZ SIGMET 03 VALID 240130/240430 WIII-
+WIIZ JAKARTA FIR EMBD TS OBS WI S0303 E10106 - S0444 E10020 - S0450 E09755 - S0249 E09541
+- S0147 E09722 - S0303 E10106 TOP FL510 MOV SW 10KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1681457<TD><B>Report No.:</B> 1681457<TD><B>Received:</B> 24-07-2019 &nbsp; 01:36.50 GMT
+</TABLE>
+<PRE>WSID20 WIII 240130 
+WIIZ SIGMET 02 VALID 240130/240430 WIII-
+WIIZ JAKARTA FIR EMBD TS OBS WI S0041 E09846 - S0053 E09453 - N0055 E09439 - N0123 E09633
+- N0042 E09858 - S0041 E09846 TOP FL520 MOV WSW 10KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1681453<TD><B>Report No.:</B> 1681453<TD><B>Received:</B> 24-07-2019 &nbsp; 01:36.10 GMT
+</TABLE>
+<PRE>WSID20 WIII 240130 
+WIIZ SIGMET 01 VALID 240130/240430 WIII-
+WIIZ JAKARTA FIR EMBD TS OBS WI N0305 E10038 - N0200 E09910 - N0306 E09737 - N0429 E09753
+- N0452 E09843 - N0305 E10038 TOP FL520 MOV WSW 15KT INTSF=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1680986<TD><B>Report No.:</B> 1680986<TD><B>Received:</B> 24-07-2019 &nbsp; 01:18.40 GMT
+</TABLE>
+<PRE>WSID21 WAAA 240118
+WAAZ SIGMET 02 VALID 240120/240520 WAAA-
+WAAZ UJUNG PANDANG FIR EMBD TS OBS WI N0213 E12215 - N0219 E12058 - N0304 E11913 - N0354 E11831 - N0400 E12308 - N0213 E12215 TOP FL520 MOV WSW 15KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1675377<TD><B>Report No.:</B> 1675377<TD><B>Received:</B> 23-07-2019 &nbsp; 21:35.40 GMT
+</TABLE>
+<PRE>WSID21 WAAA 232133
+WAAZ SIGMET 12 VALID 232135/240035 WAAA-
+WAAZ UJUNG PANDANG FIR EMBD TS OBS WI N0258 E12341 - N0302 E12023 - N0357 E11843 - N0358 E12521 - N0258 E12341 TOP FL520 MOV WSW 15KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1675188<TD><B>Report No.:</B> 1675188<TD><B>Received:</B> 23-07-2019 &nbsp; 21:24.30 GMT
+</TABLE>
+<PRE>WSID20 WIII 232123
+WIIZ SIGMET 06 VALID 232113/240113 WIII- WIIZ JAKARTA FIR EMBD TS OBS WI S0207 E10045 -
+S0526 E09748 - S0242 E09801 - S0004 E09314 - N0040 E09659 - S0207 E10045 TOP FL520 MOV SW
+10KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1668349<TD><B>Report No.:</B> 1668349<TD><B>Received:</B> 23-07-2019 &nbsp; 16:57.20 GMT
+</TABLE>
+<PRE>WSID20 WIII 231659
+WIIZ SIGMET 05 VALID 231659/232059 WIII-
+WIIZ JAKARTA FIR EMBD TS OBS WI S0316 E10049 - S0138 E09810 - N0029 E09655 - S0011 E10054
+- S0316 E10049 TOP FL520 MOV SW 10KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1663639<TD><B>Report No.:</B> 1663639<TD><B>Received:</B> 23-07-2019 &nbsp; 13:52.59 GMT
+</TABLE>
+<PRE>WSID21 WAAA 231350
+WAAZ SIGMET 10 VALID 231355/231655 WAAA-
+WAAZ UJUNG PANDANG FIR EMBD TS OBS WI N0134 E13119 - N0008 E12944 - N0024 E12807 - N0046 E12810 - N0228 E13007 - N0153 E13119 - N0134 E13119 TOP FL460 MOV WSW 15KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1661553<TD><B>Report No.:</B> 1661553<TD><B>Received:</B> 23-07-2019 &nbsp; 12:48.49 GMT
+</TABLE>
+<PRE>WSID20 WIII 231248
+WIIZ SIGMET 04 VALID 231248/231648 WIII-
+WIIZ JAKARTA FIR EMBD TS OBS WI N0038 E09647 - N0136 E09824 - N0059 E10147 - N0003 E10225
+- S0122 E09941 - N0038 E09647 TOP FL530 STNR INTSF=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1655293<TD><B>Report No.:</B> 1655293<TD><B>Received:</B> 23-07-2019 &nbsp; 09:57.49 GMT
+</TABLE>
+<PRE>WSID21 WAAA 230957
+WAAZ SIGMET 08 VALID 231000/231300 WAAA-
+WAAZ UJUNG PANDANG FIR EMBD TS OBS WI N0204 E14014 - N0058 E13844 - N0159 E13534 - N0310 E13712 - N0255 E13831 - N0204 E14014 TOP FL490 MOV WNW 15KT INTSF=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1655292<TD><B>Report No.:</B> 1655292<TD><B>Received:</B> 23-07-2019 &nbsp; 09:57.49 GMT
+</TABLE>
+<PRE>WSID21 WAAA 230957
+WAAZ SIGMET 07 VALID 231000/231300 WAAA-
+WAAZ UJUNG PANDANG FIR EMBD TS OBS WI N0119 E13328 - N0003 E13142 - N0109 E13057 - N0159 E12957 - N0219 E13134 - N0119 E13328 TOP FL510 MOV W 15KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1641405<TD><B>Report No.:</B> 1641405<TD><B>Received:</B> 23-07-2019 &nbsp; 05:25.59 GMT
+</TABLE>
+<PRE>WSID20 WIII 230515 
+WIIZ SIGMET 03 VALID 230515/230915 WIII-
+WIIZ JAKARTA FIR EMBD TS OBS WI S0226 E09655 - S0400 E09638 - S0447 E09611 - S0403 E09504
+- S0338 E09458 - S0219 E09636 - S0226 E09655 TOP FL530 MOV NNW 5KT INTSF=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1640375<TD><B>Report No.:</B> 1640375<TD><B>Received:</B> 23-07-2019 &nbsp; 04:44.19 GMT
+</TABLE>
+<PRE>WSID21 WAAA 230442 
+WAAZ SIGMET 04 VALID 230445/230845 WAAA-
+WAAZ UJUNG PANDANG FIR EMBD TS OBS WI S0124 E13753 - S0212 E13641 - S0117 E13410 - S0048 E13424 - S0041 E13558 - S0107 E13746 - S0124 E13753 TOP FL480 MOV W 15KT INTSF=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1640154<TD><B>Report No.:</B> 1640154<TD><B>Received:</B> 23-07-2019 &nbsp; 04:06.09 GMT
+</TABLE>
+<PRE>WSID21 WAAA 230404 
+WAAZ SIGMET 03 VALID 230410/230810 WAAA-
+WAAZ UJUNG PANDANG FIR EMBD TS OBS WI N0141 E13724 - S0014 E13512 - N0012 E13429 - N0050 E13434 - N0246 E13531 - N0202 E13724 - N0141 E13724 TOP FL520 MOV WNW 15KT INTSF=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1638232<TD><B>Report No.:</B> 1638232<TD><B>Received:</B> 23-07-2019 &nbsp; 01:09.29 GMT
+</TABLE>
+<PRE>WSID20 WIII 230105 
+WIIZ SIGMET 01 VALID 230105/230505 WIII-
+WIIZ JAKARTA FIR EMBD TS OBS WI S0202 E09755 - S0349 E09645 - S0319 E09600 - S0147 E09544
+- S0053 E09715 - S0122 E09738 - S0202 E09755 TOP FL490 MOV WNW 10KT NC=</PRE><HR SIZE="1"><TABLE BORDER="0" WIDTH="100%" ALIGN="CENTER" CELLSPACING="0" BGCOLOR="FFBBBB">
+<TR><TD><B>Stn ID:</B>     <TD><B>Message No.:</B> 1636919<TD><B>Report No.:</B> 1636919<TD><B>Received:</B> 23-07-2019 &nbsp; 00:04.39 GMT
+</TABLE>
+<PRE>WSID21 WAAA 230002 
+WAAZ SIGMET 01 VALID 230005/230330 WAAA-
+WAAZ UJUNG PANDANG FIR EMBD TS OBS WI S0049 E14100 - S0149 E14100 - S0212 E14038 - S0158 E14005 - S0111 E13926 - S0046 E13934 - S0049 E14100 TOP FL490 MOV W 15KT NC=</PRE><HR SIZE="1"><BR><STRONG>
+Search terminated because 20 msgs found.
+</STRONG>
+</BODY>
+</HTML>
+
