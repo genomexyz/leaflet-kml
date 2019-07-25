@@ -11,7 +11,23 @@ import pycurl
 import sys
 
 #setting
-dummyfile = 'contoh_cmss'
+dummyfile = 'contoh_cmss.html'
+strmarker = ['TOP', '=']
+
+def get_polygon(sandi):
+	akhir = -1
+	awal = sandi.find('OBS WI')
+	for i in range(len(strmarker)):
+		akhir = sandi.find(strmarker[i], awal)
+		if akhir != -1:
+			break
+	if awal == -1:
+		return awal, akhir
+	else:
+		return awal+len('OBS WI'), akhir
+
+#def validate_polygon(polygonstr):
+	
 
 #read dummy data
 dummyopen = open(dummyfile)
@@ -31,4 +47,18 @@ while True:
 	akhir = akhir+len('</PRE>')
 	allsandi.append(sandi)
 
-print(allsandi)
+for i in range(len(allsandi)):
+	while '\n' in allsandi[i]:
+		allsandi[i] = allsandi[i].replace('\n', ' ')
+	while '\t' in allsandi[i]:
+		allsandi[i] = allsandi[i].replace('\t', ' ')
+	while '  ' in allsandi[i]:
+		allsandi[i] = allsandi[i].replace('  ', ' ')
+	allsandi[i] = allsandi[i].strip()
+	ptrawal, ptrakhir = get_polygon(allsandi[i])
+	if ptrawal == -1 or ptrakhir == -1:
+		continue
+	polystr = allsandi[i][ptrawal:ptrakhir].strip()
+	print(polystr)
+#	allsandi[i] = allsandi[i].split()
+#print(allsandi)
