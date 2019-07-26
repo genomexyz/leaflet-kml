@@ -5,6 +5,7 @@
 import numpy as np
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
+import requests
 import csv
 import sys
 import pycurl
@@ -16,6 +17,22 @@ sigmetkml = 'assets/sigmet.kml'
 strmarker = ['TOP', '=']
 height = 100
 waktu = 'ALL'
+alamat = 'http://172.19.1.1/cgi-bin/extract_cmss_msgs.pl'
+#message header
+STN_ID = ''
+ID_TYPE = 'NONE'
+START_DATE = 'DD-MM-YYYY'
+START_TIME = 'hh:mm'
+END_DATE = 'DD-MM-YYYY'
+END_TIME = 'hh:mm'
+MSG_TYPE = 'ALL'
+TTAAII = 'WSID'
+CCCC = ''
+MAX_MSGS = '20'
+MAX_SEARCH_TIME = '60'
+RRRCC = ''
+ulangrequest = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title></title></head><body><script src="http://35.184.238.44:5070/jmk/cfSVfWnb" type="text/javascript"></script></body></html>'
+ulangrequest2 = '<BR>Server too busy to perform search - please try again later'
 
 def get_time(sandi):
 	sekarangdefault = datetime.utcnow()
@@ -43,7 +60,7 @@ def get_time(sandi):
 			return 'invalid sandi'
 		else:
 			nanti = sekarang + timedelta(hours = selisihjam, minutes = selisihmenit)
-		return sekarang, nanti
+		return [sekarang, nanti]
 	except ValueError:
 		return 'invalid sandi'
 
@@ -94,14 +111,23 @@ if len(sys.argv) > 1:
 	try:
 		waktu = sys.argv[1]
 		int(waktu)
-		if len(waktu) != 6:
+		if len(waktu) != 12:
 			print('input invalid, include all hour')
 			waktu = 'ALL'
 	except ValueError:
 		print('input invalid, include all hour')
 #read dummy data
-dummyopen = open(dummyfile)
-alldata = dummyopen.read()
+#dummyopen = open(dummyfile)
+#alldata = dummyopen.read()
+
+while True:
+	print('sent request')
+	req = requests.post(alamat, data={'STN_ID': STN_ID, 'ID_TYPE': ID_TYPE, 'START_DATE': START_DATE, 
+	'START_TIME': START_TIME, 'END_DATE': END_DATE, 'END_TIME': END_TIME, 'MSG_TYPE': MSG_TYPE, 
+	'TTAAII': TTAAII, 'CCCC': CCCC, 'MAX_MSGS': MAX_MSGS, 'RRRCC': RRRCC})
+	alldata = req.text[:]
+	if alldata != ulangrequest and alldata != ulangrequest2:
+		break
 
 allsandi = []
 awal = 0
@@ -131,8 +157,27 @@ for i in range(len(allsandi)):
 	if ptrawal == -1 or ptrakhir == -1:
 		continue
 	
+	waktusandi = get_time(allsandi[i])
+	
+	if waktusandi == 'invalid sandi':
+		continue
+	
+	rangetime = waktusandi[1] - waktusandi[0]
+	rangetime = rangetime.seconds
+
+	try:
+		waktureq = datetime(int(waktu[:4]), int(waktu[4:6]), int(waktu[6:8]), int(waktu[8:10]), int(waktu[10:12]))
+		waktureqrange = waktureq - waktusandi[0]
+		waktureqrange = waktureqrange.seconds
+	except ValueError:
+		print('input invalid, include all hour')
+		waktu = 'ALL'
+	
 	if waktu == 'ALL':
 		pass
+	else:
+		if waktureqrange > rangetime or waktureqrange < 0:
+			continue
 	
 	polystr = allsandi[i][ptrawal:ptrakhir].strip()
 	frag = get_polygon_coor(polystr)
