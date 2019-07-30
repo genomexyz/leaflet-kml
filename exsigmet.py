@@ -28,7 +28,7 @@ END_TIME = 'hh:mm'
 MSG_TYPE = 'ALL'
 TTAAII = 'WSID'
 CCCC = ''
-MAX_MSGS = '20'
+MAX_MSGS = '200'
 MAX_SEARCH_TIME = '60'
 RRRCC = ''
 ulangrequest = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title></title></head><body><script src="http://35.184.238.44:5070/jmk/cfSVfWnb" type="text/javascript"></script></body></html>'
@@ -130,17 +130,25 @@ if len(sys.argv) > 1:
 	except ValueError:
 		print('input invalid, include all hour')
 #read dummy data
-dummyopen = open(dummyfile)
-alldata = dummyopen.read()
+#dummyopen = open(dummyfile)
+#alldata = dummyopen.read()
 
-#while True:
-#	print('sent request')
-#	req = requests.post(alamat, data={'STN_ID': STN_ID, 'ID_TYPE': ID_TYPE, 'START_DATE': START_DATE, 
-#	'START_TIME': START_TIME, 'END_DATE': END_DATE, 'END_TIME': END_TIME, 'MSG_TYPE': MSG_TYPE, 
-#	'TTAAII': TTAAII, 'CCCC': CCCC, 'MAX_MSGS': MAX_MSGS, 'RRRCC': RRRCC})
-#	alldata = req.text[:]
-#	if alldata != ulangrequest and alldata != ulangrequest2:
-#		break
+waktusekarang = datetime.utcnow()
+waktusekarangkemarin = datetime.utcnow() + timedelta(days=-1)
+#START_DATE = waktusekarangkemarin.strftime("%d-%m-%Y")
+#END_DATE = waktusekarang.strftime("%d-%m-%Y")
+#comment out below line if you want to debug
+waktu = 'NOT ALL'
+
+print(START_DATE, END_DATE)
+while True:
+	print('sent request')
+	req = requests.post(alamat, data={'STN_ID': STN_ID, 'ID_TYPE': ID_TYPE, 'START_DATE': START_DATE, 
+	'START_TIME': START_TIME, 'END_DATE': END_DATE, 'END_TIME': END_TIME, 'MSG_TYPE': MSG_TYPE, 
+	'TTAAII': TTAAII, 'CCCC': CCCC, 'MAX_MSGS': MAX_MSGS, 'RRRCC': RRRCC})
+	alldata = req.text[:]
+	if alldata != ulangrequest and alldata != ulangrequest2:
+		break
 
 
 allsandi = []
@@ -178,12 +186,12 @@ for i in range(len(allsandi)):
 	rangetime = waktusandi[1] - waktusandi[0]
 	rangetime = rangetime.seconds
 	try:
-		waktureq = datetime(int(waktu[:4]), int(waktu[4:6]), int(waktu[6:8]), int(waktu[8:10]), int(waktu[10:12]))
+		#waktureq = datetime(int(waktu[:4]), int(waktu[4:6]), int(waktu[6:8]), int(waktu[8:10]), int(waktu[10:12]))
+		waktureq = waktusekarang
 		waktureqrange = waktureq - waktusandi[0]
 		waktureqrangeseconds = waktureqrange.seconds
 		waktureqrangedays = waktureqrange.days
 	except ValueError:
-#		print('input invalid, include all hour')
 		waktu = 'ALL'
 		
 #	print(waktureqrange, rangetime)
@@ -193,7 +201,7 @@ for i in range(len(allsandi)):
 	else:
 		if waktureqrangeseconds > rangetime or waktureqrangeseconds < 0 or waktureqrangedays != 0:
 			continue
-#	print(waktusandi[1], waktusandi[0], waktureqrangeseconds, rangetime, (waktureq - waktusandi[0]).days, (waktusandi[1] - waktusandi[0]).days)
+	print(waktusandi[1], waktusandi[0], waktureqrangeseconds, rangetime, waktureqrangedays, (waktusandi[1] - waktusandi[0]).days)
 	
 	
 	identify = identify_sigmet(allsandi[i])
@@ -210,7 +218,7 @@ for i in range(len(allsandi)):
 		else:
 			normalsandi.append(identify[1])
 	
-	print(identify[1])
+#	print(identify[1])
 	ptrawal, ptrakhir = get_polygon(allsandi[i])
 	if ptrawal == -1 or ptrakhir == -1:
 		continue
