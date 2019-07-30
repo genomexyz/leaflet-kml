@@ -34,6 +34,19 @@ RRRCC = ''
 ulangrequest = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><title></title></head><body><script src="http://35.184.238.44:5070/jmk/cfSVfWnb" type="text/javascript"></script></body></html>'
 ulangrequest2 = '<BR>Server too busy to perform search - please try again later'
 
+def identify_canceled_sandi(cnlsandi):
+	fragsandi = cnlsandi.split(' ')
+	canceled_identity = '%s %s VALID %s'%(fragsandi[-3], fragsandi[-2], fragsandi[-1])
+	return canceled_identity
+
+def identify_sigmet(sandi):
+	fragsandi = sandi.split(' ')
+	type_sigmet = 'NORMAL'
+	if 'CNL' in sandi:
+		type_sigmet = 'CANCEL'
+	identity = "%s %s %s %s %s"%(fragsandi[3], fragsandi[4], fragsandi[5], fragsandi[6], fragsandi[7])
+	return [type_sigmet, identity]
+
 def get_time(sandi):
 	sekarangdefault = datetime.utcnow()
 	fragsandi = sandi.split(' ')
@@ -117,31 +130,35 @@ if len(sys.argv) > 1:
 	except ValueError:
 		print('input invalid, include all hour')
 #read dummy data
-#dummyopen = open(dummyfile)
-#alldata = dummyopen.read()
+dummyopen = open(dummyfile)
+alldata = dummyopen.read()
 
-while True:
-	print('sent request')
-	req = requests.post(alamat, data={'STN_ID': STN_ID, 'ID_TYPE': ID_TYPE, 'START_DATE': START_DATE, 
-	'START_TIME': START_TIME, 'END_DATE': END_DATE, 'END_TIME': END_TIME, 'MSG_TYPE': MSG_TYPE, 
-	'TTAAII': TTAAII, 'CCCC': CCCC, 'MAX_MSGS': MAX_MSGS, 'RRRCC': RRRCC})
-	alldata = req.text[:]
-	if alldata != ulangrequest and alldata != ulangrequest2:
-		break
+#while True:
+#	print('sent request')
+#	req = requests.post(alamat, data={'STN_ID': STN_ID, 'ID_TYPE': ID_TYPE, 'START_DATE': START_DATE, 
+#	'START_TIME': START_TIME, 'END_DATE': END_DATE, 'END_TIME': END_TIME, 'MSG_TYPE': MSG_TYPE, 
+#	'TTAAII': TTAAII, 'CCCC': CCCC, 'MAX_MSGS': MAX_MSGS, 'RRRCC': RRRCC})
+#	alldata = req.text[:]
+#	if alldata != ulangrequest and alldata != ulangrequest2:
+#		break
+
 
 allsandi = []
 awal = 0
+cancelsandi = []
+normalsandi = []
 while True:
-	awal = alldata.find('<PRE>', awal)
+	awal = alldata.upper().find('<PRE>', awal)
 	if awal == -1:
 		break
-	akhir = alldata.find('</PRE>', awal+len('</PRE>'))
+	akhir = alldata.upper().find('</PRE>', awal+len('</PRE>'))
 	if akhir == -1:
 		break
 	sandi = alldata[awal+len('<PRE>'):akhir]
 	awal = awal+len('<PRE>')
 	akhir = akhir+len('</PRE>')
 	allsandi.append(sandi)
+
 
 msg = '<?xml version="1.0" encoding="UTF-8"?>\n'
 msg += '<kml xmlns="http://www.opengis.net/kml/2.2">\n'
@@ -153,10 +170,6 @@ for i in range(len(allsandi)):
 	while '  ' in allsandi[i]:
 		allsandi[i] = allsandi[i].replace('  ', ' ')
 	allsandi[i] = allsandi[i].strip()
-	ptrawal, ptrakhir = get_polygon(allsandi[i])
-	if ptrawal == -1 or ptrakhir == -1:
-		continue
-	
 	waktusandi = get_time(allsandi[i])
 	
 	if waktusandi == 'invalid sandi':
@@ -164,20 +177,52 @@ for i in range(len(allsandi)):
 	
 	rangetime = waktusandi[1] - waktusandi[0]
 	rangetime = rangetime.seconds
-
 	try:
 		waktureq = datetime(int(waktu[:4]), int(waktu[4:6]), int(waktu[6:8]), int(waktu[8:10]), int(waktu[10:12]))
 		waktureqrange = waktureq - waktusandi[0]
-		waktureqrange = waktureqrange.seconds
+		waktureqrangeseconds = waktureqrange.seconds
+		waktureqrangedays = waktureqrange.days
 	except ValueError:
-		print('input invalid, include all hour')
+#		print('input invalid, include all hour')
 		waktu = 'ALL'
+		
+#	print(waktureqrange, rangetime)
 	
 	if waktu == 'ALL':
 		pass
 	else:
-		if waktureqrange > rangetime or waktureqrange < 0:
+		if waktureqrangeseconds > rangetime or waktureqrangeseconds < 0 or waktureqrangedays != 0:
 			continue
+#	print(waktusandi[1], waktusandi[0], waktureqrangeseconds, rangetime, (waktureq - waktusandi[0]).days, (waktusandi[1] - waktusandi[0]).days)
+	
+	
+	identify = identify_sigmet(allsandi[i])
+	if identify[0] == 'CANCEL':
+		cancelsandi.append(identify_canceled_sandi(allsandi[i]))
+	elif identify[0] == 'NORMAL':
+		isitcanceled = False
+		for j in range(len(normalsandi[:-1])):
+			if normalsandi[j] in allsandi[i]:
+				isitcanceled = True
+				break
+		if isitcanceled:
+			continue
+		else:
+			normalsandi.append(identify[1])
+	
+	print(identify[1])
+	ptrawal, ptrakhir = get_polygon(allsandi[i])
+	if ptrawal == -1 or ptrakhir == -1:
+		continue
+	isitcanceled = False
+	for j in range(len(cancelsandi)):
+		if cancelsandi[j] in allsandi[i]:
+			isitcanceled = True
+#	for j in range(len(normalsandi[:-1])):
+#		if normalsandi[j] in allsandi[i]:
+#			isitcanceled = True
+	if isitcanceled:
+		continue
 	
 	polystr = allsandi[i][ptrawal:ptrakhir].strip()
 	frag = get_polygon_coor(polystr)
@@ -186,8 +231,8 @@ for i in range(len(allsandi)):
 		continue
 	if not validate_polygon(frag):
 		continue
-	print(frag)
-	print(polystr)
+#	print(frag)
+#	print(polystr)
 	
 	#build xml
 	msg += '<Placemark>\n'
@@ -208,6 +253,8 @@ for i in range(len(allsandi)):
 #	allsandi[i] = allsandi[i].split()
 #print(allsandi)
 msg += '</kml>'
+
+print(cancelsandi)
 
 sigmetsave = open(sigmetkml, 'w')
 sigmetsave.write(msg)

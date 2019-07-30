@@ -60,26 +60,28 @@
 
    		  })
    		  
-	d3.text('assets/data/U.asc', function(u) {
-    d3.text('assets/data/V.asc', function(v) {
-        let vf = L.VectorField.fromASCIIGrids(u, v);
-        let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
-        map.fitBounds(layer.getBounds());
+//	d3.text('assets/data/U.asc', function(u) {
+//		d3.text('assets/data/V.asc', function(v) {
+//       let vf = L.VectorField.fromASCIIGrids(u, v);
+//        let layer = L.canvasLayer.vectorFieldAnim(vf).addTo(map);
+//        map.fitBounds(layer.getBounds());
 
-        layer.on('click', function(e) {
-            if (e.value !== null) {
-                let vector = e.value;
-                let v = vector.magnitude().toFixed(2);
-                let d = vector.directionTo().toFixed(0);
-                let html = (`<span>${v} m/s to ${d}&deg</span>`);
-                let popup = L.popup()
-                    .setLatLng(e.latlng)
-                    .setContent(html)
-                    .openOn(map);
-            }
-        });
-    });
-});
+//        layer.on('click', function(e) {
+//            if (e.value !== null) {
+//                let vector = e.value;
+//                let v = vector.magnitude().toFixed(2);
+//                let d = vector.directionTo().toFixed(0);
+//                let html = (`<span>${v} m/s to ${d}&deg</span>`);
+//               let popup = L.popup()
+//                    .setLatLng(e.latlng)
+//                    .setContent(html)
+//                    .openOn(map);
+//            }
+//        });
+        // set how the vector arrow
+//        layer.options.width = 2;
+//    });
+//});
 
 </script>
 
