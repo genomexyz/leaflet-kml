@@ -1,14 +1,8 @@
-# Leaflet KML layer plugin
+# SIGMET MAP
 
-![Example](assets/ss2.png)
+![Example](assets/ss.png)
 
-Demo: https://www.windy.com/uploader
-
-This plugin was extracted from Pavel Shramov's Leaflet Plugins [repository](https://github.com/shramov/leaflet-plugins) in order to maintain this code more frequently and separate KML layer from other plugins.
-
-I fix some issue in original repo.
-
-Probablly will work on Leaflet 1+, tested on Leaflet 1.4.
+Sigmet polygons are extracted from the SIGMET code and build KML from it. Then the kml data is overlaid.
 
 ## How to use
 
